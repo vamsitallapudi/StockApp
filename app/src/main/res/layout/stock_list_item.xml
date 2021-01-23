@@ -18,7 +18,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textAllCaps="true"
-            tools:text="Hello world" />
+            tools:text="AAPL" />
 
         <TextView
             android:id="@+id/tv_index_type"
@@ -30,7 +30,7 @@
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_stock_symbol"
-            tools:text="Hello world" />
+            tools:text="Djia" />
 
         <TextView
             android:id="@+id/tv_price"

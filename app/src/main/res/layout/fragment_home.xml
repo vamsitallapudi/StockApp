@@ -58,14 +58,36 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toBottomOf="@+id/btn_help" />-->
 
+        <EditText
+            android:background="@drawable/edittext_shape"
+            android:padding="@dimen/default_padding"
+            android:id="@+id/editTextTextPersonName"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/dimen_4dp"
+            android:drawablePadding="@dimen/default_padding"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_marginStart="@dimen/default_padding"
+            android:layout_marginEnd="@dimen/default_padding"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawableEnd="@drawable/ic_baseline_filter_alt_24"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColorHint="@android:color/darker_gray"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:inputType="textPersonName"
+            android:hint="Search and add"
+            tools:layout_editor_absoluteX="98dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
             tools:listitem="@layout/stock_list_item" />
 
         <ProgressBar
