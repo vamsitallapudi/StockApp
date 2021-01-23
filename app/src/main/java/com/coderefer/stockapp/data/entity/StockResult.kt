@@ -6,5 +6,7 @@ data class StockResult(
     @SerializedName("regularMarketPrice")
     val regularMarketPrice: String,
     @SerializedName("regularMarketPreviousClose")
-    val regularMarketPreviousClose: String
+    val regularMarketPreviousClose: String,
+    @SerializedName("symbol")
+    val symbol: String
 )

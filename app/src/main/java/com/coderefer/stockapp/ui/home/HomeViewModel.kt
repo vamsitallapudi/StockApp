@@ -8,6 +8,7 @@ import com.coderefer.stockapp.data.CoroutineDispatchProvider
 import com.coderefer.stockapp.data.Result
 import com.coderefer.stockapp.data.StockRepo
 import com.coderefer.stockapp.data.entity.Stock
+import com.coderefer.stockapp.data.entity.StockResult
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -16,9 +17,9 @@ import kotlinx.coroutines.withContext
 // TODO: use DI to inject repo
 class HomeViewModel(private val repo: StockRepo) : ViewModel() {
 
-    private val weatherMutableLiveData = MutableLiveData<Result<Stock>>()
-    val stockLiveData: LiveData<Result<Stock>>
-        get() = weatherMutableLiveData
+    private val stockMutableLiveData = MutableLiveData<Result<List<StockResult>>>()
+    val stockLiveData: LiveData<Result<List<StockResult>>>
+        get() = stockMutableLiveData
 
     val dispatchProvider by lazy {
         CoroutineDispatchProvider()
@@ -33,10 +34,10 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
             result.collect {
                 when (it) {
                     is Result.Success<*> -> {
-                        weatherMutableLiveData.postValue(it as Result<Stock>)
+                        stockMutableLiveData.postValue(it as Result<List<StockResult>>)
                     }
                     is Result.Error -> {
-                        weatherMutableLiveData.postValue(it)
+                        stockMutableLiveData.postValue(it)
                     }
                     is Result.Loading -> {
                         //TODO
