@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.Cache
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -21,17 +22,26 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 //TODO: to add DI
-class StockRemoteDataSource(val context: Context) : StockDataSource {
+class StockRemoteDataSource(private val context: Context) : StockDataSource {
 
     private val okHttpClient by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
-            .addInterceptor(loggingInterceptor())
-            .cache(Cache(getCacheFile(context), 10 * 1024 * 1024))
-            .build()
+        OkHttpClient.Builder().apply {
+            addInterceptor (networkInterceptor)
+            connectTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            readTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            writeTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            addInterceptor(loggingInterceptor())
+            cache(Cache(getCacheFile(context), CACHE_SIZE))
+        }.build()
 
+    }
+
+    private val networkInterceptor = Interceptor { chain ->
+        val builder = chain.request().newBuilder()
+        builder.header(YAHOO_API_ID_KEY, YAHOO_API_ID)
+        builder.header(YAHOO_API_HOST_KEY, YAHOO_API_HOST)
+        builder.header("useQueryString", "true")
+        return@Interceptor chain.proceed(builder.build())
     }
 
     private fun getCacheFile(context:Context) : File {
@@ -70,11 +80,11 @@ class StockRemoteDataSource(val context: Context) : StockDataSource {
     private val fetchStock:Flow<Result<Stock>> = flow {
         while(true) {
             try {
-               val response = service.getWeatherAsync("Hyderabad", OPEN_WEATHER_APPID, WEATHER_UNIT).await()
+               val response = service.getQuotesAsync(REGION, DEFAULT_SYMBOLS).await()
                 if (response.isSuccessful) {
-                    val weather = response.body()
-                    if (weather!= null) {
-                        emit(Result.Success(weather))
+                    val stock = response.body()
+                    if (stock!= null) {
+                        emit(Result.Success(stock))
                         delay(FETCH_DELAY_MS)
                     } else {
                         emit(Result.Error(IOException(NETWORK_ERROR_MSG)))

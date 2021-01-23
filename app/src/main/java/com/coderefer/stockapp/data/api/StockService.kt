@@ -8,14 +8,13 @@ import retrofit2.http.Query
 
 interface StockService {
 
-    @GET("weather")
-    fun getWeatherAsync(
-        @Query("q") city: String,
-        @Query("appid") appId: String,
-        @Query("units") units: String
+    @GET("market/v2/get-quotes")
+    fun getQuotesAsync(
+        @Query("region") region: String,
+        @Query("symbols") symbols: String
     ) : Deferred<Response<Stock>>
 
     companion object {
-        const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
+        const val BASE_URL = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/"
     }
 }
