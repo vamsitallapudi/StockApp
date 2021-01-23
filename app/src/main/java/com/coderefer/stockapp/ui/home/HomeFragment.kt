@@ -22,12 +22,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_home, container, false)
         viewModel = (activity as HomeActivity).obtainViewModel()
-        fetchWeather()
-        observeWeatherLiveData()
+        fetchStocks()
+        observeStocksLiveData()
         return v
     }
 
-    private fun observeWeatherLiveData() {
+    private fun observeStocksLiveData() {
         viewModel.stockLiveData.observe(viewLifecycleOwner, Observer {
             when(it) {
                 is Result.Success -> {
@@ -37,13 +37,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun fetchWeather() {
-       viewModel.fetchWeather()
+    private fun fetchStocks() {
+       viewModel.fetchStocks()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<Button>(R.id.btn_city).setOnClickListener(this)
+        view.findViewById<Button>(R.id.btn_charts).setOnClickListener(this)
         view.findViewById<Button>(R.id.btn_search).setOnClickListener(this)
         view.findViewById<Button>(R.id.btn_help).setOnClickListener(this)
         view.findViewById<Button>(R.id.btn_prefs).setOnClickListener(this)
@@ -52,8 +52,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         lateinit var action: NavDirections
         when (v!!.id) {
-            R.id.btn_city -> {
-                action = HomeFragmentDirections.actionHomeFragmentToCityFragment()
+            R.id.btn_charts -> {
+                action = HomeFragmentDirections.actionHomeFragmentToChartFragment()
             }
             R.id.btn_help -> {
                 action = HomeFragmentDirections.actionHomeFragmentToHelpFragment()

@@ -24,7 +24,7 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
         CoroutineDispatchProvider()
     }
 
-    fun fetchWeather(): Job {
+    fun fetchStocks(): Job {
         return viewModelScope.launch(dispatchProvider.io) {
             withContext(dispatchProvider.main) {
                 showLoading()

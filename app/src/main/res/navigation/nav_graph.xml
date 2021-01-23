@@ -6,9 +6,9 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/cityFragment"
+        android:id="@+id/chartsFragment"
         android:name="com.coderefer.stockapp.ui.charts.ChartsFragment"
-        android:label="fragment_city"
+        android:label="fragment_charts"
         tools:layout="@layout/fragment_charts" />
     <fragment
         android:id="@+id/helpFragment"
@@ -21,8 +21,8 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_cityFragment"
-            app:destination="@id/cityFragment"
+            android:id="@+id/action_homeFragment_to_chartFragment"
+            app:destination="@id/chartsFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
