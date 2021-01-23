@@ -13,7 +13,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 //        TODO: remove this after DI is added
-        viewModelFactory = ViewModelFactory((application as StockApp).weatherRepo)
+        viewModelFactory = ViewModelFactory((application as StockApp).stockRepo)
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
     }
 

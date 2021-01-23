@@ -6,7 +6,7 @@ class StockRepo(
     private val localDataSource: StockLocalDataSource,
     private val remoteDataSource: StockRemoteDataSource
 ) {
-    suspend fun fetchWeather(): Flow<Result<*>> {
-        return remoteDataSource.fetchWeather()
+    suspend fun fetchStocks(stockName: String?): Flow<Result<*>> {
+        return remoteDataSource.fetchStocks(stockName)
     }
 }

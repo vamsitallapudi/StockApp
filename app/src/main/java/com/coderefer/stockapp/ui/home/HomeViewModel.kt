@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.coderefer.stockapp.data.CoroutineDispatchProvider
 import com.coderefer.stockapp.data.Result
 import com.coderefer.stockapp.data.StockRepo
-import com.coderefer.stockapp.data.entity.Stock
 import com.coderefer.stockapp.data.entity.StockResult
+import com.coderefer.stockapp.util.DEFAULT_STOCKS
 import com.coderefer.stockapp.util.event.Event
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -30,12 +30,15 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
         CoroutineDispatchProvider()
     }
 
-    fun fetchStocks(): Job {
+    fun fetchStocks(stockName:String? = null): Job {
         return viewModelScope.launch(dispatchProvider.io) {
             withContext(dispatchProvider.main) {
                 showLoading()
             }
-            val result = repo.fetchWeather()
+            var stocks = stockName
+            if(stockName == null)
+                stocks = DEFAULT_STOCKS
+            val result = repo.fetchStocks(stocks)
             result.collect {
                 hideLoading()
                 when (it) {

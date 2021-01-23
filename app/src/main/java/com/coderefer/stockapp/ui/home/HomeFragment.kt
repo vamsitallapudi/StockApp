@@ -1,21 +1,21 @@
 package com.coderefer.stockapp.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.NavDirections
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.coderefer.stockapp.R
 import com.coderefer.stockapp.data.Result
 import com.coderefer.stockapp.data.entity.Stock
 import com.coderefer.stockapp.data.entity.StockResult
 import com.coderefer.stockapp.databinding.FragmentHomeBinding
+import java.util.*
+
 
 class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var mBinding: FragmentHomeBinding
@@ -30,8 +30,43 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val adapter = initRecyclerAdapter()
         fetchStocks()
         observeStocksLiveData(adapter)
+        implementSearch()
         observeUIState()
         return mBinding.root
+    }
+
+    private fun implementSearch() {
+
+        mBinding.etSearch.addTextChangedListener(
+            object : TextWatcher {
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                private var timer: Timer = Timer()
+                private val DELAY: Long = 1000 // milliseconds
+                override fun afterTextChanged(s: Editable) {
+                    timer.cancel()
+                    timer = Timer()
+                    timer.schedule(
+                        object : TimerTask() {
+                            override fun run() {
+                                if (s.toString().isNotEmpty())
+                                    fetchStocks(s.toString())
+                                else
+                                    fetchStocks()
+                            }
+                        },
+                        DELAY
+                    )
+                }
+            }
+        )
     }
 
 
@@ -46,7 +81,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
 
     private fun observeUIState() {
-        mBinding.viewmodel!!.uiState.observe(viewLifecycleOwner, Observer{
+        mBinding.viewmodel!!.uiState.observe(viewLifecycleOwner, Observer {
             val uiModel = it ?: return@Observer
             showProgressIndicator(uiModel.showProgress)
         })
@@ -58,15 +93,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private fun observeStocksLiveData(adapter: StocksRecyclerAdapter) {
         mBinding.viewmodel!!.stockLiveData.observe(viewLifecycleOwner, {
-            when (it) {
-                is Result.Success -> {
-                    Toast.makeText(activity, it.data.toString(), Toast.LENGTH_LONG).show()
-                    val stockList = (it.data as Stock).stockQuote.stockResults
-                    populateAdapter(adapter, stockList)
-                }
-                else -> {
-                    //TODO
-                }
+            if (it is Result.Success) {
+                val stockList = (it.data as Stock).stockQuote.stockResults
+                populateAdapter(adapter, stockList)
             }
         })
     }
@@ -75,8 +104,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         adapter.submitList(list)
     }
 
-    private fun fetchStocks() {
-        mBinding.viewmodel!!.fetchStocks()
+    private fun fetchStocks(stockName: String? = null) {
+        mBinding.viewmodel!!.fetchStocks(stockName)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

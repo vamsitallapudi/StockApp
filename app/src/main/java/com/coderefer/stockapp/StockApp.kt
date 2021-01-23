@@ -11,7 +11,7 @@ class StockApp : Application() {
 
     private val isDataFromMock = false
 
-    val weatherRepo by lazy {
+    val stockRepo by lazy {
         StockRepo(localDataSource,remoteDataSource)
     }
 }

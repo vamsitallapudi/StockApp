@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit
 
 //TODO: to add DI
 class StockRemoteDataSource(private val context: Context) : StockDataSource {
+    private var stocks: String = DEFAULT_STOCKS
 
     private val okHttpClient by lazy {
         OkHttpClient.Builder().apply {
@@ -71,7 +72,8 @@ class StockRemoteDataSource(private val context: Context) : StockDataSource {
             .create(StockService::class.java)
     }
 
-    suspend fun fetchWeather() : Flow<Result<Stock>> {
+    suspend fun fetchStocks(stockName:String?) : Flow<Result<Stock>> {
+        stockName?.let { stocks = it }
         return safeApiCall(call = {
             fetchStock
         }, NETWORK_ERROR_MSG)
@@ -80,7 +82,7 @@ class StockRemoteDataSource(private val context: Context) : StockDataSource {
     private val fetchStock:Flow<Result<Stock>> = flow {
         while(true) {
             try {
-               val response = service.getQuotesAsync(REGION, DEFAULT_SYMBOLS).await()
+               val response = service.getQuotesAsync(REGION, stocks).await()
                 if (response.isSuccessful) {
                     val stock = response.body()
                     if (stock!= null) {
