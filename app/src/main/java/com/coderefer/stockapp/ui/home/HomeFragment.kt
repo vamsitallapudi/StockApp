@@ -14,11 +14,13 @@ import com.coderefer.stockapp.data.Result
 import com.coderefer.stockapp.data.entity.Stock
 import com.coderefer.stockapp.data.entity.StockResult
 import com.coderefer.stockapp.databinding.FragmentHomeBinding
+import com.coderefer.stockapp.util.SEARCH_DELAY_TIMER
 import java.util.*
 
 
 class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var mBinding: FragmentHomeBinding
+    private lateinit var defaultStockSources:String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,7 +30,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
             viewmodel = (activity as HomeActivity).obtainViewModel()
         }
         val adapter = initRecyclerAdapter()
-        fetchStocks()
+        getStockSources()
+        observeStockSources()
         observeStocksLiveData(adapter)
         implementSearch()
         observeUIState()
@@ -49,7 +52,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 }
 
                 private var timer: Timer = Timer()
-                private val DELAY: Long = 1000 // milliseconds
+                private val DELAY: Long = SEARCH_DELAY_TIMER // milliseconds
                 override fun afterTextChanged(s: Editable) {
                     timer.cancel()
                     timer = Timer()
@@ -59,7 +62,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 if (s.toString().isNotEmpty())
                                     fetchStocks(s.toString())
                                 else
-                                    fetchStocks()
+                                    getStockSources()
                             }
                         },
                         DELAY
@@ -91,6 +94,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
         mBinding.progressBar.visibility = if (showProgress) View.VISIBLE else View.GONE
     }
 
+
+    private fun observeStockSources() {
+        mBinding.viewmodel!!.stockSourcesLiveData.observe(viewLifecycleOwner, {
+            fetchStocks(it)
+        })
+    }
+
     private fun observeStocksLiveData(adapter: StocksRecyclerAdapter) {
         mBinding.viewmodel!!.stockLiveData.observe(viewLifecycleOwner, {
             if (it is Result.Success) {
@@ -104,8 +114,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
         adapter.submitList(list)
     }
 
-    private fun fetchStocks(stockName: String? = null) {
+    private fun fetchStocks(stockName: String) {
         mBinding.viewmodel!!.fetchStocks(stockName)
+    }
+    private fun getStockSources() {
+        mBinding.viewmodel!!.getStockSources()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

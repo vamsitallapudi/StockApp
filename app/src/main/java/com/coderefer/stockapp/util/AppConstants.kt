@@ -9,6 +9,10 @@ const val DEFAULT_STOCKS = "BSE,NSE,GOLD,AAPL,GOOGL,TSLA,MSFT,AMZN,NFLX,UBER,BAR
 
 const val FETCH_DELAY_MS = 100000 * 60L
 
+const val SEARCH_DELAY_TIMER = 1000L
+
+const val STOCK_PREFS = "STOCK_PREFS"
+
 const val REGION = "IN"
 
 const val NETWORK_ERROR_MSG = "Unable to fetch data from the Network."

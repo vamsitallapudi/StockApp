@@ -22,12 +22,23 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
     val stockLiveData: LiveData<Result<List<StockResult>>>
         get() = stockMutableLiveData
 
+    private val stockSourcesMutableLiveData = MutableLiveData<String>()
+    val stockSourcesLiveData: LiveData<String>
+        get() = stockSourcesMutableLiveData
+
     private val _uiState = MutableLiveData<HomeUIModel>()
     val uiState: LiveData<HomeUIModel>
         get() = _uiState
 
     val dispatchProvider by lazy {
         CoroutineDispatchProvider()
+    }
+
+    fun getStockSources() : Job {
+        return viewModelScope.launch(dispatchProvider.io) {
+            val sources = repo.getStockSources()
+            stockSourcesMutableLiveData.postValue(sources.joinToString(separator = ","))
+        }
     }
 
     fun fetchStocks(stockName:String? = null): Job {

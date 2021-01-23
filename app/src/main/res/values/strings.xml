@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MarketWatch</string>
+    <string name="stock_prefs">stock_prefs</string>
 </resources>
