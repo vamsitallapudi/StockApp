@@ -2,7 +2,6 @@ package com.coderefer.stockapp.util
 
 import com.coderefer.stockapp.data.entity.PriceModel
 import java.lang.StringBuilder
-import kotlin.math.abs
 
 class AppUtils {
     companion object {

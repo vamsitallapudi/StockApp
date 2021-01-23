@@ -30,11 +30,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val adapter = initRecyclerAdapter()
         fetchStocks()
         observeStocksLiveData(adapter)
+        observeUIState()
         return mBinding.root
     }
 
 
-    private fun initRecyclerAdapter() : StocksRecyclerAdapter {
+    private fun initRecyclerAdapter(): StocksRecyclerAdapter {
         val adapter = StocksRecyclerAdapter()
         mBinding.recyclerview.apply {
             this.adapter = adapter
@@ -43,9 +44,21 @@ class HomeFragment : Fragment(), View.OnClickListener {
         return adapter
     }
 
+
+    private fun observeUIState() {
+        mBinding.viewmodel!!.uiState.observe(viewLifecycleOwner, Observer{
+            val uiModel = it ?: return@Observer
+            showProgressIndicator(uiModel.showProgress)
+        })
+    }
+
+    private fun showProgressIndicator(showProgress: Boolean) {
+        mBinding.progressBar.visibility = if (showProgress) View.VISIBLE else View.GONE
+    }
+
     private fun observeStocksLiveData(adapter: StocksRecyclerAdapter) {
         mBinding.viewmodel!!.stockLiveData.observe(viewLifecycleOwner, {
-            when(it) {
+            when (it) {
                 is Result.Success -> {
                     Toast.makeText(activity, it.data.toString(), Toast.LENGTH_LONG).show()
                     val stockList = (it.data as Stock).stockQuote.stockResults
@@ -58,12 +71,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
         })
     }
 
-    private fun populateAdapter(adapter: StocksRecyclerAdapter,list:List<StockResult>) {
+    private fun populateAdapter(adapter: StocksRecyclerAdapter, list: List<StockResult>) {
         adapter.submitList(list)
     }
 
     private fun fetchStocks() {
-       mBinding.viewmodel!!.fetchStocks()
+        mBinding.viewmodel!!.fetchStocks()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

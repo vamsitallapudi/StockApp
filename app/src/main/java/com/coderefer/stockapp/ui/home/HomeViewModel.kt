@@ -9,6 +9,7 @@ import com.coderefer.stockapp.data.Result
 import com.coderefer.stockapp.data.StockRepo
 import com.coderefer.stockapp.data.entity.Stock
 import com.coderefer.stockapp.data.entity.StockResult
+import com.coderefer.stockapp.util.event.Event
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -21,6 +22,10 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
     val stockLiveData: LiveData<Result<List<StockResult>>>
         get() = stockMutableLiveData
 
+    private val _uiState = MutableLiveData<HomeUIModel>()
+    val uiState: LiveData<HomeUIModel>
+        get() = _uiState
+
     val dispatchProvider by lazy {
         CoroutineDispatchProvider()
     }
@@ -32,6 +37,7 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
             }
             val result = repo.fetchWeather()
             result.collect {
+                hideLoading()
                 when (it) {
                     is Result.Success<*> -> {
                         stockMutableLiveData.postValue(it as Result<List<StockResult>>)
@@ -40,7 +46,7 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
                         stockMutableLiveData.postValue(it)
                     }
                     is Result.Loading -> {
-                        //TODO
+                        //DO NOTHING
                     }
                 }
             }
@@ -48,6 +54,28 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
     }
 
     private fun showLoading() {
-//        TODO("Not yet implemented")
+        emitUIState(showProgress = true)
     }
+    private fun hideLoading() {
+        emitUIState(showProgress = false)
+    }
+
+
+    private fun emitUIState(
+        showProgress: Boolean = false,
+        showError: Event<Int>? = null,
+        showSuccess: Event<HomeUIModel>? = null
+    ) {
+        val uiModel = HomeUIModel(showProgress, showError, showSuccess)
+        _uiState.postValue(uiModel)
+    }
+
+    /**
+     * UI model for [HomeActivity]
+     */
+    data class HomeUIModel(
+        val showProgress: Boolean,
+        val showError: Event<Int>?,
+        val showSuccess: Event<HomeUIModel>?
+    )
 }
