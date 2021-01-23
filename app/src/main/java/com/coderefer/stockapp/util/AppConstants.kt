@@ -8,7 +8,7 @@ const val WEATHER_UNIT = "metric"
 
 const val DEFAULT_SYMBOLS = "BSE,NSE,GOLD,AAPL,GOOGL,TSLA,MSFT,AMZN,NFLX,UBER,BARC"
 
-const val FETCH_DELAY_MS = 1000 * 60L
+const val FETCH_DELAY_MS = 100000 * 60L
 
 const val REGION = "IN"
 
