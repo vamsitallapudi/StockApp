@@ -1,5 +1,6 @@
 package com.coderefer.stockapp.data
 
+import com.coderefer.stockapp.data.database.entity.StockResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
@@ -10,22 +11,9 @@ class StockRepo(
     private val dispatcherProvider: CoroutineDispatchProvider
 ) {
 
-    private val cache = mutableListOf<String>()
-
     suspend fun fetchStocks(stockName: String?): Flow<Result<*>> {
         return remoteDataSource.fetchStocks(stockName)
     }
-
-    fun getStockSourcesFromLocal() {
-        localDataSource.stockDao.getStockResults()
-    }
-
-
-    fun addSources(sources: List<String>) {
-        sources.forEach { localDataSource.addSource(it) }
-        cache.addAll(sources)
-    }
-
 
     suspend fun getStockSources(): String = withContext(dispatcherProvider.io) {
         val result = localDataSource.stockDao.getStockResults()
@@ -42,6 +30,14 @@ class StockRepo(
             }
         }
         sb.toString()
+    }
+
+    fun isStockInDb(symbol: String): Boolean {
+        return localDataSource.stockDao.checkStock(symbol) != null
+    }
+
+    suspend fun insertStockInDb(stockResult: StockResult): Boolean? {
+        return localDataSource.stockDao.insertStock(stockResult) != null
     }
 
 }

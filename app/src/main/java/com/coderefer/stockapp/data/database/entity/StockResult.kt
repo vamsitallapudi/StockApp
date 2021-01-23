@@ -23,5 +23,7 @@ data class StockResult(
 
     @ColumnInfo(name = "symbol")
     @SerializedName("symbol")
-    val symbol: String
+    val symbol: String,
+
+    var isInDB: Boolean
 )

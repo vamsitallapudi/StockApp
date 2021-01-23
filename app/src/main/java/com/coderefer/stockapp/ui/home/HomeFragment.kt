@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.coderefer.stockapp.data.Result
-import com.coderefer.stockapp.data.database.entity.Stock
 import com.coderefer.stockapp.data.database.entity.StockResult
 import com.coderefer.stockapp.databinding.FragmentHomeBinding
 import com.coderefer.stockapp.util.SEARCH_DELAY_TIMER
@@ -19,7 +17,7 @@ import java.util.*
 
 class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var mBinding: FragmentHomeBinding
-    private lateinit var defaultStockSources:String
+    private lateinit var stockResultsList: List<StockResult>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,7 +71,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
 
     private fun initRecyclerAdapter(): StocksRecyclerAdapter {
-        val adapter = StocksRecyclerAdapter()
+        val listener = object : RecyclerItemClickListener {
+            override fun onItemClicked(position: Int) {
+                mBinding.viewmodel!!.insertStockToDB(stockResultsList[position])
+            }
+        }
+        val adapter = StocksRecyclerAdapter(listener)
         mBinding.recyclerview.apply {
             this.adapter = adapter
             this.layoutManager = LinearLayoutManager(activity)
@@ -102,10 +105,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private fun observeStocksLiveData(adapter: StocksRecyclerAdapter) {
         mBinding.viewmodel!!.stockLiveData.observe(viewLifecycleOwner, {
-            if (it is Result.Success) {
-                val stockList = (it.data as Stock).stockQuote.stockResults
-                populateAdapter(adapter, stockList)
-            }
+            stockResultsList = it
+            populateAdapter(adapter, it)
         })
     }
 
@@ -146,5 +147,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
 //        }
 //        v.findNavController().navigate(action)
 
+    }
+    interface RecyclerItemClickListener {
+        fun onItemClicked(position:Int)
     }
 }
