@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/cityFragment"
+        android:name="com.coderefer.stockapp.ui.charts.ChartsFragment"
+        android:label="fragment_city"
+        tools:layout="@layout/fragment_charts" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.coderefer.stockapp.ui.help.HelpFragment"
+        android:label="fragment_help"
+        tools:layout="@layout/fragment_help" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.coderefer.stockapp.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_cityFragment"
+            app:destination="@id/cityFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_prefsFragment"
+            app:destination="@id/prefsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/prefsFragment"
+        android:name="com.coderefer.stockapp.ui.preferences.PrefsFragment"
+        android:label="fragment_prefs"
+        tools:layout="@layout/fragment_prefs" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.coderefer.stockapp.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+</navigation>
