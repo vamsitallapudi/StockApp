@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.coderefer.stockapp.R
-import com.coderefer.stockapp.data.entity.StockResult
+import com.coderefer.stockapp.data.database.entity.StockResult
 import com.coderefer.stockapp.databinding.StockListItemBinding
 import com.coderefer.stockapp.util.AppUtils
 

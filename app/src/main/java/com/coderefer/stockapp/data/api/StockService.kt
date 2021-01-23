@@ -1,6 +1,6 @@
 package com.coderefer.stockapp.data.api
 
-import com.coderefer.stockapp.data.entity.Stock
+import com.coderefer.stockapp.data.database.entity.Stock
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET

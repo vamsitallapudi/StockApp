@@ -7,10 +7,13 @@ import com.coderefer.stockapp.data.StockLocalDataSource
 import com.coderefer.stockapp.data.StockLocalDataSource.Companion.STOCK_PREFS_SET
 import com.coderefer.stockapp.data.StockRemoteDataSource
 import com.coderefer.stockapp.data.StockRepo
+import com.coderefer.stockapp.data.database.StocksRoomDatabase
 import com.coderefer.stockapp.util.STOCK_PREFS
 
 class StockApp : Application() {
-    private val localDataSource by lazy { StockLocalDataSource(getSharedPreferences(STOCK_PREFS, Context.MODE_PRIVATE )) }
+    //    TODO add di and remove these
+    val database by lazy { StocksRoomDatabase.getDatabase(this) }
+    private val localDataSource by lazy { StockLocalDataSource(database.stockDao(), getSharedPreferences(STOCK_PREFS, Context.MODE_PRIVATE )) }
     private val remoteDataSource by lazy { StockRemoteDataSource(applicationContext) }
 
     private val isDataFromMock = false

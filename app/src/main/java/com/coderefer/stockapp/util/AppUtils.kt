@@ -1,6 +1,6 @@
 package com.coderefer.stockapp.util
 
-import com.coderefer.stockapp.data.entity.PriceModel
+import com.coderefer.stockapp.data.database.entity.PriceModel
 import java.lang.StringBuilder
 
 class AppUtils {

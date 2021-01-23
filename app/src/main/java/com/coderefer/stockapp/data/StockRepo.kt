@@ -16,6 +16,10 @@ class StockRepo(
         return remoteDataSource.fetchStocks(stockName)
     }
 
+    fun getStockSourcesFromLocal() {
+        localDataSource.stockDao.getStockResults()
+    }
+
 
     fun addSources(sources: List<String>) {
         sources.forEach { localDataSource.addSource(it) }
@@ -23,26 +27,21 @@ class StockRepo(
     }
 
 
-    suspend fun getStockSources(): List<String> = withContext(dispatcherProvider.io) {
-        return@withContext getStockSourcesSync()
+    suspend fun getStockSources(): String = withContext(dispatcherProvider.io) {
+        val result = localDataSource.stockDao.getStockResults()
+        val sb = StringBuilder()
+        if (result.isNullOrEmpty()) {
+            defaultSources.forEach {
+                sb.append(it)
+                sb.append(",")
+            }
+        } else {
+            result.forEach {
+                sb.append(it.symbol)
+                sb.append(",")
+            }
+        }
+        sb.toString()
     }
 
-
-    private fun getStockSourcesSync(): List<String> {
-        if (cache.isNotEmpty()) {
-            return cache
-        }
-        // cache is empty
-        val sourceKeys = localDataSource.getKeys()
-        if (sourceKeys == null) {
-            addSources(defaultSources)
-            return defaultSources
-        }
-        val sources = mutableListOf<String>()
-        sourceKeys.forEach {
-            sources.add(it)
-        }
-        cache.addAll(sources)
-        return cache
-    }
 }

@@ -1,4 +1,4 @@
-package com.coderefer.stockapp.data.entity
+package com.coderefer.stockapp.data.database.entity
 
 import com.google.gson.annotations.SerializedName
 

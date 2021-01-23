@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.coderefer.stockapp.data.CoroutineDispatchProvider
 import com.coderefer.stockapp.data.Result
 import com.coderefer.stockapp.data.StockRepo
-import com.coderefer.stockapp.data.entity.StockResult
+import com.coderefer.stockapp.data.database.entity.StockResult
 import com.coderefer.stockapp.util.DEFAULT_STOCKS
 import com.coderefer.stockapp.util.event.Event
 import kotlinx.coroutines.Job
@@ -36,8 +36,7 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
 
     fun getStockSources() : Job {
         return viewModelScope.launch(dispatchProvider.io) {
-            val sources = repo.getStockSources()
-            stockSourcesMutableLiveData.postValue(sources.joinToString(separator = ","))
+            stockSourcesMutableLiveData.postValue(repo.getStockSources())
         }
     }
 

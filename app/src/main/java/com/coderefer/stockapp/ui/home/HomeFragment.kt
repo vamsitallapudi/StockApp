@@ -6,13 +6,12 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coderefer.stockapp.data.Result
-import com.coderefer.stockapp.data.entity.Stock
-import com.coderefer.stockapp.data.entity.StockResult
+import com.coderefer.stockapp.data.database.entity.Stock
+import com.coderefer.stockapp.data.database.entity.StockResult
 import com.coderefer.stockapp.databinding.FragmentHomeBinding
 import com.coderefer.stockapp.util.SEARCH_DELAY_TIMER
 import java.util.*

@@ -2,8 +2,9 @@ package com.coderefer.stockapp.data
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.coderefer.stockapp.data.database.dao.StockDao
 
-class StockLocalDataSource(private val prefs:SharedPreferences) : StockDataSource {
+class StockLocalDataSource(val stockDao: StockDao, private val prefs:SharedPreferences) : StockDataSource {
     /**
      * Get all sources
      */

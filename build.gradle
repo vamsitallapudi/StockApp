@@ -6,6 +6,7 @@ buildscript {
         retrofit_version = "2.9.0"
         retrofit_adapter_version = "0.9.2"
         logging_interceptor_version = "4.9.0"
+        room_version = "2.2.5"
     }
     repositories {
         google()

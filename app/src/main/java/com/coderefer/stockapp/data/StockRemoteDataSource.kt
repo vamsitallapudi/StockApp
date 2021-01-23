@@ -5,7 +5,7 @@ import com.coderefer.stockapp.BuildConfig
 import com.coderefer.stockapp.util.*
 import com.coderefer.stockapp.data.api.StockService
 import com.coderefer.stockapp.data.api.StockService.Companion.BASE_URL
-import com.coderefer.stockapp.data.entity.Stock
+import com.coderefer.stockapp.data.database.entity.Stock
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.delay
