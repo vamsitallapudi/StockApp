@@ -45,21 +45,29 @@ class ChartsFragment : Fragment() {
     private fun observeChartData() {
         mBinding.viewmodel!!.chartLiveData.observe(viewLifecycleOwner, {
 
-            val candleStickValues= mutableListOf<CandleEntry>()
-            val quotes = it.chart.result[0].indicators.quote
-            val close = quotes[0].close
-            val open = quotes[0].open
-            val low = quotes[0].low
-            val high = quotes[0].high
+            val candleStickValues = mutableListOf<CandleEntry>()
+            try {
+                val quotes = it.chart.result[0].indicators.quote
+                val close = quotes[0].close
+                val open = quotes[0].open
+                val low = quotes[0].low
+                val high = quotes[0].high
 
-            for (i in close.indices) {
-                try {
-                    candleStickValues.add(CandleEntry(i.toFloat(), high[i].toFloat(),low[i].toFloat(),open[i].toFloat(), close[i].toFloat()))
-                } catch (e: Exception) {
-                    Log.e(ChartsFragment::class.simpleName, e.toString())
+                for (i in close.indices) {
+                    candleStickValues.add(
+                        CandleEntry(
+                            i.toFloat(),
+                            high[i].toFloat(),
+                            low[i].toFloat(),
+                            open[i].toFloat(),
+                            close[i].toFloat()
+                        )
+                    )
                 }
+                createCandleDataSet(candleStickValues)
+            } catch (e: Exception) {
+                Log.e(ChartsFragment::class.simpleName, e.toString())
             }
-            createCandleDataSet(candleStickValues)
         })
     }
 
@@ -69,10 +77,12 @@ class ChartsFragment : Fragment() {
         set1.shadowColor = ContextCompat.getColor(activity as Context, R.color.stockIndicatorGrey)
         set1.shadowWidth = 0.8f
         set1.decreasingColor = ContextCompat.getColor(
-            activity as Context, R.color.stockIndicatorGreen)
+            activity as Context, R.color.stockIndicatorGreen
+        )
         set1.decreasingPaintStyle = Paint.Style.FILL
         set1.increasingColor = ContextCompat.getColor(
-            activity as Context, R.color.stockIndicatorRed)
+            activity as Context, R.color.stockIndicatorRed
+        )
         set1.increasingPaintStyle = Paint.Style.FILL
         set1.neutralColor = Color.LTGRAY
         set1.setDrawValues(false)
