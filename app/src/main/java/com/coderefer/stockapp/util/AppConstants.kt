@@ -7,7 +7,7 @@ const val YAHOO_API_HOST = "apidojo-yahoo-finance-v1.p.rapidapi.com"
 
 const val DEFAULT_STOCKS = "BSE,NSE,GOLD,AAPL,GOOGL,TSLA,MSFT,AMZN,NFLX,UBER,BARC"
 
-const val FETCH_DELAY_MS = 100000 * 60L
+const val FETCH_DELAY_MS = 1000 * 30L
 
 const val SEARCH_DELAY_TIMER = 1000L
 

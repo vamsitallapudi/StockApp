@@ -121,14 +121,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         mBinding.viewmodel!!.getStockSources()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        view.findViewById<Button>(R.id.btn_charts).setOnClickListener(this)
-//        view.findViewById<Button>(R.id.btn_search).setOnClickListener(this)
-//        view.findViewById<Button>(R.id.btn_help).setOnClickListener(this)
-//        view.findViewById<Button>(R.id.btn_prefs).setOnClickListener(this)
-    }
-
     override fun onClick(v: View?) {
 //        lateinit var action: NavDirections
 //        when (v!!.id) {

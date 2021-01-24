@@ -2,7 +2,6 @@ package com.coderefer.stockapp.data.database.dao
 
 import androidx.room.*
 import com.coderefer.stockapp.data.database.entity.StockResult
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StockDao {

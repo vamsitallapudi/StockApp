@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import com.coderefer.stockapp.data.CoroutineDispatchProvider
 import com.coderefer.stockapp.data.StockLocalDataSource
-import com.coderefer.stockapp.data.StockLocalDataSource.Companion.STOCK_PREFS_SET
 import com.coderefer.stockapp.data.StockRemoteDataSource
 import com.coderefer.stockapp.data.StockRepo
 import com.coderefer.stockapp.data.database.StocksRoomDatabase
