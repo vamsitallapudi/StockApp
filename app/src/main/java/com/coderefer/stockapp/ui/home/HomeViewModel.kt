@@ -9,6 +9,8 @@ import com.coderefer.stockapp.data.Result
 import com.coderefer.stockapp.data.StockRepo
 import com.coderefer.stockapp.data.database.entity.Stock
 import com.coderefer.stockapp.data.database.entity.StockResult
+import com.coderefer.stockapp.data.database.entity.charts.Chart
+import com.coderefer.stockapp.data.database.entity.charts.ChartResp
 import com.coderefer.stockapp.util.DEFAULT_STOCKS
 import com.coderefer.stockapp.util.event.Event
 import kotlinx.coroutines.Job
@@ -30,6 +32,13 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
     private val stockSourcesMutableLiveData = MutableLiveData<String>()
     val stockSourcesLiveData: LiveData<String>
         get() = stockSourcesMutableLiveData
+
+    private val chartMutableLiveData = MutableLiveData<ChartResp>()
+    val chartLiveData: LiveData<ChartResp>
+        get() = chartMutableLiveData
+
+
+
 
     private val _uiState = MutableLiveData<HomeUIModel>()
     val uiState: LiveData<HomeUIModel>
@@ -69,6 +78,30 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
                             stockResult.isInDB = repo.isStockInDb(stockResult.symbol)
                         }
                         stockMutableLiveData.postValue(stockResultsList)
+                    }
+                    is Result.Error -> {
+//                        showErrorScreen()
+                    }
+                    is Result.Loading -> {
+                        //DO NOTHING
+                    }
+                }
+            }
+        }
+    }
+
+    fun fetchCharts(stock:String) : Job {
+        return viewModelScope.launch(dispatchProvider.io) {
+            withContext(dispatchProvider.main) {
+                showLoading()
+            }
+
+            val result = repo.fetchCharts(stock)
+            result.collect {
+                hideLoading()
+                when (it) {
+                    is Result.Success<*> -> {
+                        chartMutableLiveData.postValue(it.data as ChartResp)
                     }
                     is Result.Error -> {
 //                        showErrorScreen()

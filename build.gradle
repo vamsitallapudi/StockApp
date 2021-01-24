@@ -9,6 +9,7 @@ buildscript {
         room_version = "2.2.5"
     }
     repositories {
+        maven { url 'https://jitpack.io' }
         google()
         jcenter()
     }
@@ -24,6 +25,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://jitpack.io' }
         google()
         jcenter()
     }

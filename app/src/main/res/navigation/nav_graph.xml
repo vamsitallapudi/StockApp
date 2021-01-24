@@ -9,7 +9,12 @@
         android:id="@+id/chartsFragment"
         android:name="com.coderefer.stockapp.ui.charts.ChartsFragment"
         android:label="fragment_charts"
-        tools:layout="@layout/fragment_charts" />
+        tools:layout="@layout/fragment_charts" >
+        <argument
+            android:name="stockSymbol"
+            app:argType="string"
+            android:defaultValue="AAPL" />
+    </fragment>
     <fragment
         android:id="@+id/helpFragment"
         android:name="com.coderefer.stockapp.ui.help.HelpFragment"

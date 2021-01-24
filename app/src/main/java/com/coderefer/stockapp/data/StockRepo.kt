@@ -14,6 +14,9 @@ class StockRepo(
     suspend fun fetchStocks(stockName: String?): Flow<Result<*>> {
         return remoteDataSource.fetchStocks(stockName)
     }
+    suspend fun fetchCharts(stockName: String?): Flow<Result<*>> {
+        return remoteDataSource.fetchCharts(stockName)
+    }
 
     suspend fun getStockSources(): String = withContext(dispatcherProvider.io) {
         val result = localDataSource.stockDao.getStockResults()

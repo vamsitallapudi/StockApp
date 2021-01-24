@@ -1,6 +1,8 @@
 package com.coderefer.stockapp.data.api
 
 import com.coderefer.stockapp.data.database.entity.Stock
+import com.coderefer.stockapp.data.database.entity.charts.Chart
+import com.coderefer.stockapp.data.database.entity.charts.ChartResp
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
@@ -13,6 +15,13 @@ interface StockService {
         @Query("region") region: String,
         @Query("symbols") symbols: String
     ) : Deferred<Response<Stock>>
+
+    @GET("market/get-charts")
+    fun getChartsAsync(
+        @Query("symbol") symbol: String,
+        @Query("interval") interval: String,
+        @Query("range") range: String
+    ) : Deferred<Response<ChartResp>>
 
     companion object {
         const val BASE_URL = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/"

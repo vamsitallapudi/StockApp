@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coderefer.stockapp.data.database.entity.StockResult
 import com.coderefer.stockapp.databinding.FragmentHomeBinding
+import com.coderefer.stockapp.ui.charts.ChartsFragmentArgs
 import com.coderefer.stockapp.util.SEARCH_DELAY_TIMER
 import java.util.*
 
@@ -18,6 +21,11 @@ import java.util.*
 class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var stockResultsList: List<StockResult>
+    val args: ChartsFragmentArgs by navArgs()
+
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,12 +79,19 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
 
     private fun initRecyclerAdapter(): StocksRecyclerAdapter {
-        val listener = object : RecyclerItemClickListener {
-            override fun onItemClicked(position: Int) {
+        val addClickListener = object : RecyclerAddClickListener {
+            override fun onAddClicked(position: Int) {
                 mBinding.viewmodel!!.insertStockToDB(stockResultsList[position])
             }
         }
-        val adapter = StocksRecyclerAdapter(listener)
+        val itemClickListener = object : RecyclerItemClickListener {
+            override fun onItemClicked(position: Int) {
+
+                val action = HomeFragmentDirections.actionHomeFragmentToChartFragment(stockResultsList[position].symbol)
+                findNavController().navigate(action)
+            }
+        }
+        val adapter = StocksRecyclerAdapter(addClickListener, itemClickListener)
         mBinding.recyclerview.apply {
             this.adapter = adapter
             this.layoutManager = LinearLayoutManager(activity)
@@ -139,6 +154,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
 //        }
 //        v.findNavController().navigate(action)
 
+    }
+    interface RecyclerAddClickListener {
+        fun onAddClicked(position:Int)
     }
     interface RecyclerItemClickListener {
         fun onItemClicked(position:Int)

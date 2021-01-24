@@ -6,6 +6,8 @@ import com.coderefer.stockapp.util.*
 import com.coderefer.stockapp.data.api.StockService
 import com.coderefer.stockapp.data.api.StockService.Companion.BASE_URL
 import com.coderefer.stockapp.data.database.entity.Stock
+import com.coderefer.stockapp.data.database.entity.charts.Chart
+import com.coderefer.stockapp.data.database.entity.charts.ChartResp
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.delay
@@ -24,6 +26,8 @@ import java.util.concurrent.TimeUnit
 //TODO: to add DI
 class StockRemoteDataSource(private val context: Context) : StockDataSource {
     private var stocks: String = DEFAULT_STOCKS
+
+    private var chartStock:String = DEFAULT_CHART_STOCK
 
     private val okHttpClient by lazy {
         OkHttpClient.Builder().apply {
@@ -79,6 +83,13 @@ class StockRemoteDataSource(private val context: Context) : StockDataSource {
         }, NETWORK_ERROR_MSG)
     }
 
+    suspend fun fetchCharts(stockName:String?) : Flow<Result<ChartResp>> {
+        stockName?.let { chartStock = it }
+        return safeApiCall(call = {
+            fetchChart
+        }, NETWORK_ERROR_MSG)
+    }
+
     private val fetchStock:Flow<Result<Stock>> = flow {
         while(true) {
             try {
@@ -93,8 +104,27 @@ class StockRemoteDataSource(private val context: Context) : StockDataSource {
                     }
                 }
             } catch (e: Exception) {
+                emit(Result.Error(IOException(e.toString())))
+                delay(FETCH_DELAY_MS)
+            }
+        }
+    }
 
 
+    private val fetchChart:Flow<Result<ChartResp>> = flow {
+        while(true) {
+            try {
+               val response = service.getChartsAsync(chartStock, CHART_INTERVAL, CHART_RANGE).await()
+                if (response.isSuccessful) {
+                    val chart = response.body()
+                    if (chart!= null) {
+                        emit(Result.Success(chart))
+                        delay(FETCH_DELAY_MS)
+                    } else {
+                        emit(Result.Error(IOException(NETWORK_ERROR_MSG)))
+                    }
+                }
+            } catch (e: Exception) {
                 emit(Result.Error(IOException(e.toString())))
                 delay(FETCH_DELAY_MS)
             }

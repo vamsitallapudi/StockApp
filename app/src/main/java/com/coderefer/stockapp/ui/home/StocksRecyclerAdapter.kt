@@ -13,7 +13,10 @@ import com.coderefer.stockapp.data.database.entity.StockResult
 import com.coderefer.stockapp.databinding.StockListItemBinding
 import com.coderefer.stockapp.util.AppUtils
 
-class StocksRecyclerAdapter(private val listener: HomeFragment.RecyclerItemClickListener) :
+class StocksRecyclerAdapter(
+    private val listener: HomeFragment.RecyclerAddClickListener,
+    private val itemClickListener: HomeFragment.RecyclerItemClickListener
+) :
     ListAdapter<StockResult, StocksRecyclerAdapter.StockViewHolder>(STOCKS_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StockViewHolder {
@@ -22,7 +25,7 @@ class StocksRecyclerAdapter(private val listener: HomeFragment.RecyclerItemClick
 
     override fun onBindViewHolder(holder: StockViewHolder, position: Int) {
         val postItem = getItem(position)
-        holder.bind(postItem, listener, position)
+        holder.bind(postItem, listener, itemClickListener, position)
     }
 
 
@@ -30,7 +33,12 @@ class StocksRecyclerAdapter(private val listener: HomeFragment.RecyclerItemClick
         RecyclerView.ViewHolder(binding.root) {
         private var stockResult: StockResult? = null
         private var mBinding: StockListItemBinding = binding
-        fun bind(postsWithMultiMedia: StockResult, listener: HomeFragment.RecyclerItemClickListener, position: Int) {
+        fun bind(
+            postsWithMultiMedia: StockResult,
+            listener: HomeFragment.RecyclerAddClickListener,
+            itemClickListener: HomeFragment.RecyclerItemClickListener,
+            position: Int
+        ) {
             this.stockResult = postsWithMultiMedia
             mBinding.tvStockSymbol.text = this.stockResult?.symbol
             mBinding.tvIndexType.text = this.stockResult?.symbol
@@ -48,10 +56,13 @@ class StocksRecyclerAdapter(private val listener: HomeFragment.RecyclerItemClick
                 )
             }
             mBinding.tvDifference.text = priceModel.priceDiff
-            mBinding.ivAdd.visibility = if(this.stockResult!!.isInDB) View.GONE else View.VISIBLE
+            mBinding.ivAdd.visibility = if (this.stockResult!!.isInDB) View.GONE else View.VISIBLE
             mBinding.ivAdd.setOnClickListener {
                 it.visibility = View.GONE
-                listener.onItemClicked(position)
+                listener.onAddClicked(position)
+            }
+            mBinding.root.setOnClickListener {
+                itemClickListener.onItemClicked(position)
             }
         }
 

@@ -12,6 +12,8 @@
     <color name="colorPrimaryDark">#16202A</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="stockIndicatorGrey">#FFB1B1B1</color>
+    <color name="stockIndicatorDarkGrey">#FF707070</color>
     <color name="stockIndicatorGreen">#52A05A</color>
     <color name="stockIndicatorRed">#CC5755</color>
     <color name="editTextColor">#2F4052</color>
