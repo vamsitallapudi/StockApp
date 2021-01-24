@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.coderefer.stockapp.ui.home.HomeActivity
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
+import java.lang.Exception
 
 
 class ChartsFragment : Fragment() {
@@ -51,7 +53,11 @@ class ChartsFragment : Fragment() {
             val high = quotes[0].high
 
             for (i in close.indices) {
-                candleStickValues.add(CandleEntry(i.toFloat(), high[i].toFloat(),low[i].toFloat(),open[i].toFloat(), close[i].toFloat()))
+                try {
+                    candleStickValues.add(CandleEntry(i.toFloat(), high[i].toFloat(),low[i].toFloat(),open[i].toFloat(), close[i].toFloat()))
+                } catch (e: Exception) {
+                    Log.e(ChartsFragment::class.simpleName, e.toString())
+                }
             }
             createCandleDataSet(candleStickValues)
         })
