@@ -1,8 +1,9 @@
 package com.coderefer.stockapp.data.api
 
 import com.coderefer.stockapp.data.database.entity.Stock
-import com.coderefer.stockapp.data.database.entity.charts.Chart
 import com.coderefer.stockapp.data.database.entity.charts.ChartResp
+import com.coderefer.stockapp.util.CHART_INTERVAL
+import com.coderefer.stockapp.util.DEFAULT_CHART_RANGE
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
@@ -19,8 +20,8 @@ interface StockService {
     @GET("market/get-charts")
     fun getChartsAsync(
         @Query("symbol") symbol: String,
-        @Query("interval") interval: String,
-        @Query("range") range: String
+        @Query("interval") interval: String = CHART_INTERVAL,
+        @Query("range") range: String = DEFAULT_CHART_RANGE
     ) : Deferred<Response<ChartResp>>
 
     companion object {

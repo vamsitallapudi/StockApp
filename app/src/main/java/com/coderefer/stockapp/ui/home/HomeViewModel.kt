@@ -90,13 +90,13 @@ class HomeViewModel(private val repo: StockRepo) : ViewModel() {
         }
     }
 
-    fun fetchCharts(stock:String) : Job {
+    fun fetchCharts(stock:String, range:String?) : Job {
         return viewModelScope.launch(dispatchProvider.io) {
             withContext(dispatchProvider.main) {
                 showLoading()
             }
 
-            val result = repo.fetchCharts(stock)
+            val result = repo.fetchCharts(stock, range)
             result.collect {
                 hideLoading()
                 when (it) {

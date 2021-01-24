@@ -14,11 +14,11 @@ class StockRepo(
     suspend fun fetchStocks(stockName: String?): Flow<Result<*>> {
         return remoteDataSource.fetchStocks(stockName)
     }
-    suspend fun fetchCharts(stockName: String?): Flow<Result<*>> {
-        return remoteDataSource.fetchCharts(stockName)
+    suspend fun fetchCharts(stockName: String?, range:String?): Flow<Result<*>> {
+        return remoteDataSource.fetchCharts(stockName, range)
     }
 
-    suspend fun getStockSources(): String = withContext(dispatcherProvider.io) {
+    fun getStockSources(): String  {
         val result = localDataSource.stockDao.getStockResults()
         val sb = StringBuilder()
         if (result.isNullOrEmpty()) {
@@ -32,7 +32,7 @@ class StockRepo(
                 sb.append(",")
             }
         }
-        sb.toString()
+      return sb.toString()
     }
 
     fun isStockInDb(symbol: String): Boolean {

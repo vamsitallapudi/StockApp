@@ -36,10 +36,22 @@ class ChartsFragment : Fragment() {
             viewmodel = (activity as HomeActivity).obtainViewModel()
         }
         initializeCandleStickChart()
+        implementListenersForRange()
+        setTitle()
         fetchChartData()
         observeChartData()
         observeUIState()
         return mBinding.root
+    }
+
+    private fun setTitle() {
+        mBinding.tvStockSymbol.text = args.stockSymbol
+    }
+
+    private fun implementListenersForRange() {
+        mBinding.tv1D.setOnClickListener { fetchChartData(range = "1D") }
+        mBinding.tv3M.setOnClickListener { fetchChartData(range = "3M") }
+        mBinding.tv6M.setOnClickListener { fetchChartData(range = "6M") }
     }
 
     private fun observeChartData() {
@@ -136,7 +148,7 @@ class ChartsFragment : Fragment() {
         mBinding.progressBar.visibility = if (showProgress) View.VISIBLE else View.GONE
     }
 
-    private fun fetchChartData() {
-        mBinding.viewmodel!!.fetchCharts(args.stockSymbol)
+    private fun fetchChartData(range:String? =null) {
+        mBinding.viewmodel!!.fetchCharts(args.stockSymbol,range)
     }
 }

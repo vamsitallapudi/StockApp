@@ -21,10 +21,6 @@ import java.util.*
 class HomeFragment : Fragment(), View.OnClickListener {
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var stockResultsList: List<StockResult>
-    val args: ChartsFragmentArgs by navArgs()
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

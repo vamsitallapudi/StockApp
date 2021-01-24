@@ -15,19 +15,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:background="@color/colorPrimaryDark"
         tools:context=".ui.home.HomeFragment">
-
-        <!-- TODO: Update blank fragment layout -->
-        <com.github.mikephil.charting.charts.CandleStickChart
-            android:id="@+id/candle_stick_chart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -38,5 +27,57 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_stock_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AAPL"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="@dimen/dimen_8dp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv1D"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1D"
+            android:textStyle="bold"
+            android:padding="@dimen/dimen_8dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv3M"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3M"
+            android:textStyle="bold"
+            android:padding="@dimen/dimen_8dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@id/tv1D"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv6M"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6M"
+            android:textStyle="bold"
+            android:padding="@dimen/dimen_8dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@id/tv3M"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.github.mikephil.charting.charts.CandleStickChart
+            android:id="@+id/candle_stick_chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv1D" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

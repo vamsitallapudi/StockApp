@@ -1,12 +1,12 @@
 package com.coderefer.stockapp.data
 
 import android.content.Context
+import android.util.Log
 import com.coderefer.stockapp.BuildConfig
 import com.coderefer.stockapp.util.*
 import com.coderefer.stockapp.data.api.StockService
 import com.coderefer.stockapp.data.api.StockService.Companion.BASE_URL
 import com.coderefer.stockapp.data.database.entity.Stock
-import com.coderefer.stockapp.data.database.entity.charts.Chart
 import com.coderefer.stockapp.data.database.entity.charts.ChartResp
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -27,11 +27,12 @@ import java.util.concurrent.TimeUnit
 class StockRemoteDataSource(private val context: Context) : StockDataSource {
     private var stocks: String = DEFAULT_STOCKS
 
-    private var chartStock:String = DEFAULT_CHART_STOCK
+    private var chartStock: String = DEFAULT_CHART_STOCK
+    private var chartRange: String = DEFAULT_CHART_RANGE
 
     private val okHttpClient by lazy {
         OkHttpClient.Builder().apply {
-            addInterceptor (networkInterceptor)
+            addInterceptor(networkInterceptor)
             connectTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
             readTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
             writeTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
@@ -49,7 +50,7 @@ class StockRemoteDataSource(private val context: Context) : StockDataSource {
         return@Interceptor chain.proceed(builder.build())
     }
 
-    private fun getCacheFile(context:Context) : File {
+    private fun getCacheFile(context: Context): File {
         val cacheFile = File(context.cacheDir, "okhttp_cache")
         cacheFile.mkdirs()
         return cacheFile
@@ -76,27 +77,20 @@ class StockRemoteDataSource(private val context: Context) : StockDataSource {
             .create(StockService::class.java)
     }
 
-    suspend fun fetchStocks(stockName:String?) : Flow<Result<Stock>> {
+    suspend fun fetchStocks(stockName: String?): Flow<Result<Stock>> {
         stockName?.let { stocks = it }
         return safeApiCall(call = {
             fetchStock
         }, NETWORK_ERROR_MSG)
     }
 
-    suspend fun fetchCharts(stockName:String?) : Flow<Result<ChartResp>> {
-        stockName?.let { chartStock = it }
-        return safeApiCall(call = {
-            fetchChart
-        }, NETWORK_ERROR_MSG)
-    }
-
-    private val fetchStock:Flow<Result<Stock>> = flow {
-        while(true) {
+    private val fetchStock: Flow<Result<Stock>> = flow {
+        while (true) {
             try {
-               val response = service.getQuotesAsync(REGION, stocks).await()
+                val response = service.getQuotesAsync(REGION, stocks).await()
                 if (response.isSuccessful) {
                     val stock = response.body()
-                    if (stock!= null) {
+                    if (stock != null) {
                         emit(Result.Success(stock))
                         delay(FETCH_DELAY_MS)
                     } else {
@@ -110,24 +104,33 @@ class StockRemoteDataSource(private val context: Context) : StockDataSource {
         }
     }
 
+    suspend fun fetchCharts(stockName: String?, range: String?): Flow<Result<ChartResp>> {
+        stockName?.let { chartStock = it }
+        range?.let { chartRange = it }
+        return safeApiCall(call = {
+            fetchChart
+        }, NETWORK_ERROR_MSG)
+    }
 
-    private val fetchChart:Flow<Result<ChartResp>> = flow {
-        while(true) {
-            try {
-               val response = service.getChartsAsync(chartStock, CHART_INTERVAL, CHART_RANGE).await()
-                if (response.isSuccessful) {
-                    val chart = response.body()
-                    if (chart!= null) {
-                        emit(Result.Success(chart))
-                        delay(FETCH_DELAY_MS)
-                    } else {
-                        emit(Result.Error(IOException(NETWORK_ERROR_MSG)))
-                    }
-                }
-            } catch (e: Exception) {
-                emit(Result.Error(IOException(e.toString())))
-                delay(FETCH_DELAY_MS)
+    private val fetchChart: Flow<Result<ChartResp>> = flow {
+        try {
+            var chartInterval = CHART_INTERVAL
+            if(chartRange =="3M") {
+                chartInterval = "15m"
+            } else if (chartRange == "6m") {
+                chartInterval = "15m"
             }
+            val response = service.getChartsAsync(chartStock, chartInterval, chartRange).await()
+            if (response.isSuccessful) {
+                val chart = response.body()
+                if (chart != null) {
+                    emit(Result.Success(chart))
+                } else {
+                    emit(Result.Error(IOException(NETWORK_ERROR_MSG)))
+                }
+            }
+        } catch (e: Exception) {
+            emit(Result.Error(IOException(e.toString())))
         }
     }
 

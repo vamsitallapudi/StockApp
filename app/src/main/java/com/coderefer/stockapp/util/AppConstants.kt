@@ -21,4 +21,4 @@ const val NETWORK_ERROR_MSG = "Unable to fetch data from the Network."
 const val CACHE_SIZE = 10 * 1024 * 1024L
 
 val CHART_INTERVAL = "5m"
-val CHART_RANGE = "1d"
+const val DEFAULT_CHART_RANGE = "1d"
